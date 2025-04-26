@@ -1,15 +1,36 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import AdminHeader from '../components/admin/AdminHeader';
 import ProductGrid from '../components/product/ProductGrid';
 import Footer from '../components/footer/Footer';
+import SwiperCategories from '../components/SwiperCategories';
 import { products, Product } from '../data/products';
 
 const CategoryPage: React.FC = () => {
     const { categoryId } = useParams<{ categoryId: string }>();
+    const navigate = useNavigate();
     const parsedCategoryId = categoryId ? parseInt(categoryId, 10) : undefined;
 
-    // Move useEffect to the top, before any early returns
+    // Define categories (same as in HomePage)
+    const categories = [
+        { id: 1, name: 'Все', image: '/magnolia.png' },
+        { id: 2, name: 'Популярное', image: '/magnolia.png' },
+        { id: 3, name: 'Витрина онлайн', image: '/magnolia.png' },
+        { id: 4, name: 'Авторские букеты', image: '/magnolia.png' },
+        { id: 5, name: 'Монобукеты', image: '/magnolia.png' },
+        { id: 6, name: 'Композиции', image: '/magnolia.png' },
+        { id: 7, name: 'Сезонные', image: '/magnolia.png' },
+        { id: 8, name: 'Сухоцветы', image: '/magnolia.png' },
+        { id: 9, name: 'Свадебный букет', image: '/magnolia.png' },
+    ];
+
+    // Handle category click
+    const handleCategoryClick = (categoryId: number) => {
+        console.log('Navigating to category:', categoryId);
+        navigate(`/category/${categoryId}`);
+    };
+
+    // Log filtered products
     useEffect(() => {
         if (parsedCategoryId && !isNaN(parsedCategoryId)) {
             const filteredProducts = Object.values(products)
@@ -33,7 +54,11 @@ const CategoryPage: React.FC = () => {
         <div className="category-page">
             <AdminHeader />
             <main className="main-content">
-                {/* Removed the heading <h1>Категория: {parsedCategoryId}</h1> */}
+                <SwiperCategories
+                    categories={categories}
+                    activeCategory={parsedCategoryId}
+                    onCategoryClick={handleCategoryClick}
+                />
                 {filteredProducts.length > 0 ? (
                     <ProductGrid products={filteredProducts} key={`category-${parsedCategoryId}`} />
                 ) : (
