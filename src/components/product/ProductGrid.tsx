@@ -1,5 +1,5 @@
 // src/components/product/ProductGrid.tsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import cartIcon from '../../assets/icon-white.svg';
 import { products as allProducts, Product } from '../../data/products';
@@ -29,17 +29,21 @@ const ProductGrid: React.FC<ProductGridProps> = ({ categoryId, products: propPro
         new Map(displayProducts.map((product) => [product.id, product])).values()
     );
 
-    const firstRowProducts = isDesktop
-        ? uniqueDisplayProducts.slice(0, 4)
-        : isTablet
-            ? uniqueDisplayProducts.slice(0, 3)
-            : uniqueDisplayProducts.slice(0, 6);
+    const firstRowProducts = useMemo(() => {
+        return isDesktop
+            ? uniqueDisplayProducts.slice(0, 4)
+            : isTablet
+                ? uniqueDisplayProducts.slice(0, 3)
+                : uniqueDisplayProducts.slice(0, 6);
+    }, [uniqueDisplayProducts, isDesktop, isTablet]);
 
-    const secondRowProducts = isDesktop
-        ? uniqueDisplayProducts.slice(4, 7)
-        : isTablet
-            ? uniqueDisplayProducts.slice(3, 5)
-            : [];
+    const secondRowProducts = useMemo(() => {
+        return isDesktop
+            ? uniqueDisplayProducts.slice(4, 7)
+            : isTablet
+                ? uniqueDisplayProducts.slice(3, 5)
+                : [];
+    }, [uniqueDisplayProducts, isDesktop, isTablet]);
 
     useEffect(() => {
         console.log('ProductGrid rendered with categoryId:', categoryId);
